@@ -9,13 +9,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// สร้าง connection pool ด้วย createPool()
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD
+// 1. ตั้งค่า Database โดยอ่านจาก environment variables (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD)
+const pool = new Pool({
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 3306,
+  database: process.env.DB_NAME || 'qr_code', // ถ้า DB ยังไม่มี สามารถใช้ admin tool สร้างได้ล่วงหน้า
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'FTOedf36275'
 });
 
 // ตัวอย่าง query ตรวจสอบการเชื่อมต่อ (คุณสามารถเพิ่มใน initDB หรือทดลองแยกได้)
@@ -25,15 +25,6 @@ pool.query('SELECT 1', (err, results) => {
   } else {
     console.log('Database connection succeeded.');
   }
-});
-
-// 1. ตั้งค่า Database โดยอ่านจาก environment variables (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD)
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 3306,
-  database: process.env.DB_NAME || 'qr_code', // ถ้า DB ยังไม่มี สามารถใช้ admin tool สร้างได้ล่วงหน้า
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'FTOedf36275'
 });
 
 // 2. สร้างตารางใน database ชื่อ qr_code (ถ้ายังไม่มี)
