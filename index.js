@@ -48,13 +48,6 @@ const imageDir = path.join(__dirname, 'data');
 if (!fs.existsSync(imageDir)) fs.mkdirSync(imageDir);
 app.use('/qr-images', express.static(imageDir));
 
-// Middleware: Verify Basic Auth header
-function verifyBasicAuth(req) {
-  const authHeader = req.headers['authorization'];
-  const fixedAuthValue = 'Basic MDk2ODI1NjM2NTU6'; // Hardcoded Base64 value
-  return authHeader === fixedAuthValue;
-}
-
 // Helper function: Convert text to integer (for amount)
 function convertTextToInt(text) {
   const num = parseInt(text, 10);
@@ -66,11 +59,6 @@ function convertTextToInt(text) {
 
 // Route: API endpoint to generate PromptPay QR code, save image and record to DB
 app.post('/generate', async (req, res) => {
-  // Only POST allowed
-  if (!verifyBasicAuth(req)) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
   let promptpayId = req.body.promptpayId;
   let amount;
   try {
