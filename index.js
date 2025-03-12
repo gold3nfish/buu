@@ -3,7 +3,7 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
-const qr = require('qr-image');
+const qrImage = require('qr-image');
 const promptpay = require('promptpay-qr');
 
 const app = express();
@@ -82,7 +82,7 @@ app.post('/generate', async (req, res) => {
   }
 
   try {
-    const qrData = promptpay.generate(promptpayId, parseFloat(amount));
+    const payload = promptpay.generatePayload(promptpayId, (amount));
     const qrPng = qr.imageSync(qrData, { type: 'png' });
 
     const fileName = `qr_${Date.now()}.png`;
