@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2/promise'); // Use promise version of mysql2
 const fs = require('fs');
