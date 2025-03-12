@@ -1,13 +1,31 @@
 const express = require('express');
-const { Pool } = require('mysql2');
+const mysql = require('mysql2'); // เปลี่ยนจาก { Pool } เป็น mysql
 const fs = require('fs');
 const path = require('path');
 const qr = require('qr-image');
-const promptpay = require('promptpay-qr'); // ใช้สำหรับ generate PromptPay QR data
+const promptpay = require('promptpay-qr');
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// สร้าง connection pool ด้วย createPool()
+const pool = mysql.createPool({
+  host: process.env.DB_HOST',
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD
+});
+
+// ตัวอย่าง query ตรวจสอบการเชื่อมต่อ (คุณสามารถเพิ่มใน initDB หรือทดลองแยกได้)
+pool.query('SELECT 1', (err, results) => {
+  if (err) {
+    console.error('Database connection failed:', err);
+  } else {
+    console.log('Database connection succeeded.');
+  }
+});
 
 // 1. ตั้งค่า Database โดยอ่านจาก environment variables (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD)
 const pool = new Pool({
