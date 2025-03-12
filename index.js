@@ -82,8 +82,8 @@ app.post('/generate', async (req, res) => {
   }
 
   try {
-    const payload = promptpay.generatePayload(promptpayId, (amount));
-    const qrPng = qr.imageSync(qrData, { type: 'png' });
+    const payload = promptpay.generatePayload(promptpayId, {amount});
+    const qrPng = qr.imageSync(payload, { type: 'png' });
 
     const fileName = `qr_${Date.now()}.png`;
     const savePath = path.join(imageDir, fileName);
