@@ -3,20 +3,21 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
-const qrImage = require('qr-image');
+const qr = require('qr-image');
 const promptpay = require('promptpay-qr');
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // Database configuration
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: process.env.DB_HOST || "202.151.176.72" ,
+  port: process.env.DB_PORT || "3306",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "FTOedf36275" ,
+  database: process.env.DB_NAME || "qr_code",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -82,8 +83,9 @@ app.post('/generate', async (req, res) => {
   }
 
   try {
-    const payload = promptpay.generatePayload(promptpayId, { amount });
-    const qrPng = qr.imageSync(payload, { type: 'png' });
+    console.log(promptpay);
+    const qrData = promptpay(promptpayId, parseFloat(amount));
+    const qrPng = qr.imageSync(qrData, { type: 'png' });
 
     const fileName = `qr_${Date.now()}.png`;
     const savePath = path.join(imageDir, fileName);
