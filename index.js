@@ -84,7 +84,7 @@ app.post('/generate', async (req, res) => {
 
   try {
     console.log(promptpay);
-    const qrData = promptpay(promptpayId, parseFloat(amount));
+    const qrData = promptpay(promptpayId, (amount));
     const qrPng = qr.imageSync(qrData, { type: 'png' });
 
     const fileName = `qr_${Date.now()}.png`;
